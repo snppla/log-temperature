@@ -16,16 +16,28 @@ var db *string
 var username *string
 var password *string
 var host *string
+var location *string
+var verbose *bool
+var test *bool
 
 func main() {
 	db = flag.String("db", "temperature", "Influxdb database")
 	username = flag.String("user", "", "Username")
 	password = flag.String("password", "", "Password")
 	host = flag.String("host", "http://localhost", "Host to connect to")
+	location = flag.String("location", "room", "Name for the location")
+	verbose = flag.Bool("verbose", false, "Make more verbose")
+	test = flag.Bool("test", false, "Use a test input string")
 	flag.Parse()
 
-	reader := bufio.NewReader(os.Stdin)
-	//reader := bufio.NewReader(strings.NewReader(testString))
+	var reader *bufio.Reader
+
+	if *test {
+		reader = bufio.NewReader(strings.NewReader(testString))
+	} else {
+		reader = bufio.NewReader(os.Stdin)
+	}
+
 	client, err := influx.NewHTTPClient(influx.HTTPConfig{
 		Addr:     *host,
 		Username: *username,
@@ -41,6 +53,9 @@ func main() {
 		text, err := reader.ReadString('\n')
 		if err != nil {
 			return
+		}
+		if *verbose {
+			fmt.Print(text)
 		}
 		fields := strings.Fields(text)
 		for i := 0; i < len(fields); i++ {
@@ -71,7 +86,7 @@ func logTemp(temp float64, client influx.Client) {
 		fmt.Println(err)
 		return
 	}
-	tags := map[string]string{"location": "conference-room"}
+	tags := map[string]string{"location": *location}
 	fields := map[string]interface{}{
 		"temperature": temp,
 	}
