@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -23,8 +24,8 @@ func main() {
 	host = flag.String("host", "http://localhost", "Host to connect to")
 	flag.Parse()
 
-	//reader := bufio.NewReader(os.Stdin)
-	reader := bufio.NewReader(strings.NewReader(testString))
+	reader := bufio.NewReader(os.Stdin)
+	//reader := bufio.NewReader(strings.NewReader(testString))
 	client, err := influx.NewHTTPClient(influx.HTTPConfig{
 		Addr:     *host,
 		Username: *username,
