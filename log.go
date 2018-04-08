@@ -50,7 +50,7 @@ func main() {
 			if strings.Compare(fields[0], "temperature:") == 0 {
 				temp, _ := strconv.ParseFloat(fields[1], 64)
 				unit := fields[2]
-				if strings.Compare(unit, "c") == 0 {
+				if strings.Compare(unit, "f") == 0 {
 					temp = (temp - 32) * (5.0 / 9.0)
 				}
 				fmt.Println("temp is " + strconv.FormatFloat(temp, 'f', 6, 64))
@@ -71,7 +71,7 @@ func logTemp(temp float64, client influx.Client) {
 		fmt.Println(err)
 		return
 	}
-	tags := map[string]string{"temperature": "conference-room"}
+	tags := map[string]string{"location": "conference-room"}
 	fields := map[string]interface{}{
 		"temperature": temp,
 	}
