@@ -38,7 +38,7 @@ ENV PASSWORD ""
 ENV HOST http://localhost:8086
 ENV RTL_ARGS ""
 
-CMD rtl_433 $RTL_ARGS | log-temperature -host $HOST -db $DB -password $PASSWORD -user $USER
+CMD rtl_433 -F json $RTL_ARGS | log-temperature -host $HOST -db $DB -password $PASSWORD -user $USER
 
 ##############################
 
